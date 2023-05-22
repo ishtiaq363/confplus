@@ -1,4 +1,4 @@
-import { schedRepo } from "../../repos/SchedRepo";
+import { schedRepo } from "../../repos/schedule-repo";
 
 export async function GET(request, { params }) {
   //get session by id
