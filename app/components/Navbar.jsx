@@ -39,6 +39,9 @@ export default function Navbar() {
                 <li className="nav-item">
                   <Link href="/author" className="nav-link" > Submit Paper</Link>
                 </li>
+                <li className="nav-item">
+                  <Link href="/reviewer" className="nav-link" > Review</Link>
+                </li>
 
               </ul>
 
