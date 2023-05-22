@@ -1,0 +1,88 @@
+nav{
+  margin-top: 10px;
+  /* box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px; */
+  
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+article{
+  margin-top: 2%;
+  padding: 0 2%;
+}
+
+.myheading{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.search{
+  width:100%;
+ display: flex;
+  margin-right: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  justify-content: space-evenly;
+}
+.myselect{
+  width: 50% !important;
+}
+pre{
+  display: inline-flex;
+}
+
+.mydisplaybox{
+  margin-bottom: 12px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+.mytitle{
+  margin-top: 15px;
+}
+.mycontainer{
+  padding-top: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-items: center;
+  align-items: start;
+  justify-content: space-evenly;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.buttonrow{
+  display: flex;
+  justify-content: space-between;
+}
+.myform{
+  width: 45%;
+}
+.list{
+  margin-top: 25px;
+  width: 50%;
+}
+.paperholder{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
+.myAccordian{
+  display: flex;
+  justify-content: space-evenly;
+  /* background-color: yellow; */
+  height: fit-content;
+}
+.paperInfo{
+  /* background-color: green; */
+  width: 49%;
+}
+.paperResult{
+  /* background-color: blueviolet; */
+  width: 49%;
+}
+
+.result{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.sessionHeading{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-around;
+}
