@@ -2,14 +2,16 @@ import fs from "fs-extra";
 import path from "path";
 import { accountsRepo } from "./users-repo";
 import { readJSON } from "../utils";
-
+import prisma from '../prisma'
 const filePath = "data/papers.json";
 export const getPapers = async () => await readJSON(filePath);
+//import { PrismaClient } from "@prisma/client";
+//const prisma = new PrismaClient();
 
-export async function getPaperById(id) {
-  const papers = await getPapers();
-  return papers.find((p) => p.id == id);
-}
+// export async function getPaperById(id) {
+//   const papers = await getPapers();
+//   return papers.find((p) => p.id == id);
+// }
 
 class PapersRepo {
   constructor() {
@@ -17,13 +19,27 @@ class PapersRepo {
   }
 
   async getPapers() {
-    const papers = await fs.readJSON(this.filePath);
+    const papers = await prisma.paper.findMany();
     return papers;
   }
-
-  async getPaperById(id) {
-    const papers = await this.getPapers();
-    return papers.find((a) => a.id == id);
+  async getPapersByReviewerId(mid) {
+    const papers = await prisma.paper.findMany({
+      where: {
+        reviewers: {
+          in: mid,
+        },
+      },
+    });
+    return papers;
+  }
+ 
+  async  getPaperById(pid) {
+    const paper = await prisma.paper.findUnique({
+      where:{
+        id:parseInt(pid)
+      }
+    })
+    return paper;
   }
 
   async getAcceptedPapers() {
@@ -42,11 +58,32 @@ class PapersRepo {
     const paper = await this.getPaperById(paperId);
     return paper.reviews;
   }
-
+  async getReviewByPaperId(paperId){
+    const previousReview = await prisma.paper.findUnique({
+      where :{
+        id:paperId
+      },
+      select:{
+        reviews: true
+      }
+    })
+    return previousReview;
+  }
   async addReview(paperId, review) {
-    const paper = await this.getPaperById(paperId);
-    paper.reviews.push(review);
-    await this.updatePaper(paper);
+   const prevVal =  await this.getReviewByPaperId(parseInt(paperId))
+   
+   prevVal.reviews.push(review);
+    const paper =await prisma.paper.update({
+      where: {
+        id: parseInt( paperId),
+      },
+      data: {
+        reviews: {
+          set: prevVal.reviews
+        }
+      },
+    })
+   await this.updatePaper(paper);
   }
 
   async updateReview(paperId, review) {
@@ -57,14 +94,19 @@ class PapersRepo {
   }
 
   async addPaper(paper) {
-    const papers = await this.getPapers();
-    paper.id =
-      papers.legth > 0 ? Math.max(...papers.map((paper) => paper.id)) + 1 : 1;
     paper.reviewers = await accountsRepo.getRandomReviewersID(); //assign paper to random reviewers
     paper.isPresented = false;
     paper.reviews = [];
-    papers.push(paper);
-    await fs.writeJSON(this.filePath, papers);
+ 
+    try {
+      const cr = await prisma.paper.create({
+        data: paper,
+      });
+     
+    } catch (e) {
+      
+      return { error: e.message };
+    }
   }
 
   async togglePresented(id) {

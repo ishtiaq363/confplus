@@ -1,6 +1,12 @@
+
+import Providers from './components/Providers'
+
 export default function Home() {
   return (
     <article >
+      
+      
+      
       <h1 className='myheading'>Welcome to ConfPlus</h1>
       <p className="lead">
         Welcome to ConfPlus! Conference Management App!

@@ -10,6 +10,9 @@ export async function POST(request, { params }) {
   //add a review to a paper
   const { paperId } = params;
   const review = await request.json();
+  console.log('here  we got ')
+  console.log(paperId);
+  console.log(JSON.stringify(review));
   await papersRepo.addReview(paperId, review);
   return Response.json(review);
 }

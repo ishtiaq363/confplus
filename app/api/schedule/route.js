@@ -2,12 +2,11 @@ import { getSchedule, schedRepo } from "../repos/schedule-repo";
 
 export async function GET(request) {
   try {
-    //get all sessions or get sessions by date
-    const { searchParams } = new URL(request.url);
-    const date = searchParams?.get("date");
-    console.log('searchParams.get("date")', date);
-    const schedule = await getSchedule(date);
-    //console.log(schedule);
+   
+     const schedule = await schedRepo.getAllSchedule();
+     console.log('i am in schedule rout')
+    console.log(schedule);
+    console.log('i am at end of schedule rout')
     return Response.json(schedule);
   } catch (e) {
     console.log(e);

@@ -86,3 +86,57 @@ pre{
   display: flex;
   justify-content: space-around;
 }
+
+.location{
+  font-size: 12px;
+}
+
+
+
+
+.mybody
+{
+    font-family: 'Poppins', sans-serif;
+    /* background-image: linear-gradient(90deg, #9C27B0, #673AB7); */
+    background-color: #EC9F05;
+}
+.content
+{
+    height: 100vh;
+}
+.form-check-input:checked
+{
+    background: #EC9F05;
+    border-color: #EC9F05;
+}
+.btn-dark
+{
+    background: #EC9F05 !important;
+}
+.bi
+{
+    padding: 11px;
+    width: 38px;
+    text-align: center;
+    text-decoration: none;
+    margin: 1px 3px;
+    border-radius: 50%;
+}
+.bi-google
+{
+    background: #3b5998;
+    color: #fff;
+}
+.bi-github
+{
+    background: #171515 ;
+}
+
+.invalid{
+  color: red;
+}
+
+.infoMessage{
+  text-align: center;
+  color:brown;
+}

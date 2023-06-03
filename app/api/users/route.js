@@ -19,5 +19,15 @@ export async function GET(request) {
     return Response.json(accounts);
   }
   const accounts = await accountsRepo.getAccounts();
+ 
   return Response.json(accounts);
+}
+
+
+export async function POST(request) {
+ 
+  const user = await request.json();
+  
+ // return Response.json(user);
+  return Response.json(...(await accountsRepo.getuserbyemailandpassword(user)));
 }

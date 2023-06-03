@@ -1,11 +1,32 @@
 'use client';
 import Link from 'next/link';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
+//import { signIn, signOut,useSession, getSession} from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
+  const [mysession, setMySession] = useState({});
+  const [email, setEmail] = useState('');
+  // const { data: session } = useSession()
+  const [userType, setUserType] = useState({})
+  const [role, setRole] = useState('visitor');
+  const router = useRouter();
+  console.log('hellothis')
+  // { id: '', firstName: '', lastName: '', email: '', password: '', role: '' }
+  useEffect(() => {
+    function setNavbar() {
+      console.log('i am here')
+      const user = JSON.parse(window.localStorage.getItem('myuser'))
+
+      setUserType(user);
+      console.log(userType)
+    }
+    setNavbar();
+  }, [])
 
   useEffect(() => {
-    import("../../node_modules/bootstrap/dist/js/bootstrap");
+
+    import("../../node_modules/bootstrap/dist/js/bootstrap.js");
   }, [])
   return (
     <>
@@ -14,7 +35,9 @@ export default function Navbar() {
           <div className="container-fluid">
             <Link className="navbar-brand" href="#">
               CONFPLUS
+
             </Link>
+
             <button
               className="navbar-toggler"
               type="button"
@@ -37,25 +60,60 @@ export default function Navbar() {
                   <Link href="/schedule" className="nav-link" > Schedule</Link>
                 </li>
                 <li className="nav-item">
-                  <Link href="/author" className="nav-link" > Submit Paper</Link>
+                  {userType?.role === "author" && <Link href="/author" className="nav-link" > Submit Paper</Link>}
                 </li>
                 <li className="nav-item">
-                  <Link href="/reviewer" className="nav-link" > Review</Link>
+                  {userType?.role === "reviewer" && <Link href="/reviewer" className="nav-link" > Review</Link>}
                 </li>
+                <li className="nav-item">
+                  {userType?.role === "organizer" && <Link href="/organizer" className="nav-link" > Manage conferences</Link>}
+                </li>
+
 
               </ul>
 
               <ul className="navbar-nav">
-                <li className="nav-item">
-                  <Link className="nav-link active" aria-current="page" href="#">
-                    Login
-                  </Link>
+
+                <li className="nav-item " >
+
+               {userType?.role &&   <Link className="nav-link " style={{
+                    color: 'green',
+                    fontSize: '18px'
+                  }} aria-current="page" href={'/'}>Hi, {userType?.firstName}</Link>
+                  }
                 </li>
+                <li className="nav-item">
+
+                  {userType?.role && <Link style={{
+                    color: 'red',
+                    fontSize: '18px'
+                  }} onClick={(e) => {
+                    e.preventDefault()
+                    window.localStorage.removeItem('myuser');
+                    router.push('/');
+                    setUserType({})
+                  }} className="nav-link active" aria-current="page" href="#">
+                    Logout
+                  </Link>
+                  }
+                </li>
+
+                <li className="nav-item">
+                  {!userType?.role && <Link onClick={(e) => {
+                    e.preventDefault();
+                    router.push('/auth/login')
+                    // signIn();
+                  }} className="nav-link active" aria-current="page" href="#">
+                    Login
+                  </Link>}
+                </li>
+
+
               </ul>
             </div>
           </div>
         </nav>
       </div>
-        </>
+    </>
   )
 }

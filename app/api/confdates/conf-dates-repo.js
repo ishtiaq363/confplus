@@ -1,5 +1,19 @@
-import { readJSON } from "../utils.js";
 
+
+import prisma from './prisma'
 export async function getConfDates() {
-  return await readJSON("data/conf-dates.json");
+  try {
+
+    const dates = await prisma.confDate.findMany();
+    return await dates;
+  } catch (e) {
+    console.log(e.message);
+    return { error: e.message };
+  }
+ 
 }
+
+
+
+
+

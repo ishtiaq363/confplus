@@ -6,6 +6,11 @@ import { readJSON } from "../utils";
 
 const filePath = "data/schedule.json";
 
+import prisma from '../prisma'
+//import { PrismaClient } from "@prisma/client";
+//const prisma = new PrismaClient();
+
+
 export async function getSchedule(date) {
   let schedule = await readJSON(filePath);
 
@@ -38,8 +43,10 @@ class SchedRepo {
     this.filePath = path.join(process.cwd(), "data/schedule.json");
   }
 
-  async getSchedule() {
-    const sched = await fs.readJSON(this.filePath);
+  async getAllSchedule() {
+   // const sched = await fs.readJSON(this.filePath);
+      const sched = await prisma.schedule.findMany();
+      
     return sched;
   }
 
@@ -65,23 +72,58 @@ class SchedRepo {
   }
 
   async addSession(session) {
-    const sched = await this.getSchedule();
-    session.id =
-      sched.length > 0 ? Math.max(...sched.map((sess) => sess.id)) + 1 : 1;
-    sched.push(session);
-    await fs.writeJSON(this.filePath, sched);
+    session.presentations=[]
+    await prisma.schedule.create({
+      data:session
+    })
     return session;
   }
 
   async addPresentation(sessID, presentation) {
-    const sess = await this.getSession(sessID);
-    presentation.id =
-      sess.presentations.length > 0
-        ? Math.max(...sess.presentations.map((press) => press.id)) + 1
-        : 1;
-    sess.presentations.push(presentation);
-    this.updateSession(sess);
-    await papersRepo.togglePresented(presentation.paperId);
+    
+    const previousPresentation = await prisma.schedule.findUnique({
+      where:{
+        id: parseInt(sessID)
+      },
+      select:{
+        presentations: true
+      }
+    })
+    console.log('we get')
+    console.log(previousPresentation)
+    if(previousPresentation.presentations.length>0){
+      const val = previousPresentation.presentations.findIndex(item=>  item.paperId === presentation.paperId);
+      console.log(val)
+      if(val!= -1){
+      
+      previousPresentation.presentations = previousPresentation.presentations.map(pp => pp.paperId ===presentation.paperId ? pp : presentation)
+      }else{
+        previousPresentation.presentations.push(presentation);
+      }
+    }else{
+    previousPresentation.presentations[0]=presentation;
+    }
+    await prisma.schedule.update({
+      where: {
+        id: parseInt(sessID),
+      },
+      data: {
+        presentations: {
+          set: previousPresentation.presentations
+        }
+      },
+    })
+   
+    await prisma.paper.update({
+      where:{
+        id: parseInt(presentation.paperId)
+      },
+      data: {
+        isPresented: {
+          set: true
+        }
+      },
+    })
     return presentation;
   }
 
@@ -117,14 +159,21 @@ class SchedRepo {
     };
   }
 
-  async deleteSession(id) {
-    let sched = await this.getSchedule();
-    sched = sched.filter((sess) => sess.id != id);
-    await fs.writeJSON(this.filePath, sched);
-    for (let press of await this.getPresentations(id)) {
-      await papersRepo.togglePresented(press.paperId);
-    }
+  async deleteSession(sid) {
+    
+    try
+    {
+    const sch= await prisma.schedule.delete({
+      where: {
+        id: sid,
+      },
+    })
     return { message: `Session with id : ${id} deleted` };
+
+  }catch(error){
+    return { message: error };
+  }
+    
   }
 
   async deletePresentation(sessID, presId) {

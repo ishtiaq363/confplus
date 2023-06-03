@@ -10,11 +10,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "../ERD.svg"
+}
+
 model User{
-  id        Int     @id @default(autoincrement())
+  id        Int     @id 
   firstName String
   lastName String
-  email String
+  email String @unique
   password String
   role String
+}
+
+model Paper{
+id    Int     @id @default(autoincrement())
+title String
+authors Json[]
+reviewers Int[]
+abstract String
+paperURL String
+isPresented Boolean
+reviews Json[]
+}
+
+model confDate{
+  id    Int     @id @default(autoincrement())
+  conDate String[]
+}
+
+model institution{
+  id    Int     @id @default(autoincrement())
+  instituteName String[]
+}
+
+model  location{
+  id    Int     @id @default(autoincrement())
+  locationName String[]
+}
+
+
+model Schedule{
+id    Int     @id @default(autoincrement())
+title String
+date String
+location String
+presentations Json[]
 }

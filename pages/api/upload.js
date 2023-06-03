@@ -12,11 +12,14 @@ export const config = {
 export default (req, res) => {
   if (req.method === "POST") {
     const form = formidable({ multiples: false });
+   // console.log(form)
     form.parse(req, async function (err, fields, files) {
+   //   console.log(files)
       if (err) {
         console.error("Error", err);
         throw err;
       }
+     // console.log(files.file[0])
       const paperURL = await saveFile(files.file[0]);
       return res.status(201).json({ paperURL });
     });
@@ -25,6 +28,7 @@ export default (req, res) => {
 
 const saveFile = async (file) => {
   //console.dir(file)
+  console.log(' i am in save file')
   const { filepath, originalFilename } = file;
   console.log("File path", filepath);
   console.log("Original Filename", originalFilename);
@@ -34,8 +38,8 @@ const saveFile = async (file) => {
   )}`;
   const uploadToPath = path.join(
     process.cwd(),
-    "resources",
-    "pdfs",
+    "public",
+    "papers",
     uploadToFileName
   );
   console.log("Save path", uploadToPath);

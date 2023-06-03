@@ -91,7 +91,15 @@ class API {
     const presentation = await response.json();
     return presentation;
   }
-
+async checkTheUser  (user){
+  const response = await fetch(`${BASE_URL}/users`, {
+    method: 'POST',
+    
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  })
+  return response.json();
+}
   async updateSession(session) {
     const response = await fetch(`${BASE_URL}/schedule/${session.id}`, {
       method: "PUT",
@@ -207,6 +215,7 @@ class API {
   }
 
   async addPaper(paper) {
+    
     const response = await fetch(`${BASE_URL}/papers`, {
       method: "POST",
       headers: {
@@ -221,6 +230,7 @@ class API {
   async getPaperByReviewerId(id) {
     const response = await fetch(`${BASE_URL}/papers?reviewerID=${id}`);
     const papers = await response.json();
+    console.log(papers)
     for (let paper of papers) {
       Object.setPrototypeOf(paper, Paper.prototype);
       for (let author of paper.authors) {
@@ -249,6 +259,8 @@ class API {
   }
 
   async addReview(paperId, review) {
+    console.log('in ad review api service');
+    console.log(review)
     const response = await fetch(`${BASE_URL}/papers/${paperId}/reviews`, {
       method: "POST",
       headers: {

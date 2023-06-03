@@ -8,9 +8,10 @@ export async function GET(request) {
   if (reviewerID) {
     //filter papers that the reviewer is assigned to
     const filteredPapers = papers.filter((p) =>
-      p.reviewers.some((r) => r == reviewerID)
-    );
+       p.reviewers.some((r) => r == reviewerID)
+     );
     //note: some() returns true if at least one element in the array meets the condition
+  //  const filteredPapers = await papersRepo.getPapersByReviewerId(reviewerID);
     return Response.json(filteredPapers);
   }
   return Response.json(papers);
